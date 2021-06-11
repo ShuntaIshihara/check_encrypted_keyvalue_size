@@ -1,0 +1,20 @@
+enclave
+{
+    struct keyvalue {
+        char key[32];
+        char value[32];
+    };
+
+	trusted
+	{
+		/*These are ECALL defines.*/
+		public int ecall_start([in,out]struct keyvalue table[2][10], [in]struct keyvalue *data, [in]int *size);
+	};
+
+	untrusted
+	{
+		/*These are OCALL defines.*/
+        /*void ocall_check_hash([in]int *h, [in, string]char *key);*/
+        void ocall_return_stash([in]struct keyvalue stash[2]);
+	};
+};
