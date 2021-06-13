@@ -11,22 +11,16 @@
 sgx_enclave_id_t global_eid = 0;
 
 //OCALL implementation
-
-//ハッシュ値のチェック
-//void ocall_check_hash(int *h, char *key)
-//{
-//    std::cout << "-----check hash value-----" << std::endl;
-//    std::cout << "key = " << key << std::endl;
-//    std::cout << "hash value = " << *h << std::endl;
-//}
-
-void ocall_return_stash(struct keyvalue stash[2])
+void ocall_enc_data(unsigned char *penc_data, size_t *size)
 {
-    std::cout << "-----check stash candidate-----" << std::endl;
-    std::cout << "stash = {";
-    std::cout << "(" << stash[0].key << ", " << stash[0].value << "), ";
-    std::cout << "(" << stash[1].key << ", " << stash[1].value << ")}";
-    std::cout << std::endl;
+    std::printf("enc_data = %s\n", (char *)penc_data);
+    std::cout << "size = " << *size << std::endl;
+}
+
+void ocall_dec_data(unsigned char *pdec_data, size_t *size)
+{
+    std::printf("dec_data = %s\n", (char *)pdec_data);
+    std::cout << "size = " << *size << std::endl;
 }
 
 /* Enclave initialization function */
@@ -148,78 +142,33 @@ int main()
 
 	/* start ECALL */
     int size = 10;
-    struct keyvalue table[2][10];
-    for (int i = 0; i < size; i++) {
-        std::string key = "dummy_";
-        std::string value = "dummy_";
-        key += std::to_string(i);
-        value += std::to_string(i);
-        std::strcpy(table[0][i].key, key.c_str());
-        std::strcpy(table[0][i].value, key.c_str());
-        key += std::to_string(i);
-        value += std::to_string(i);
-        std::strcpy(table[1][i].key, value.c_str());
-        std::strcpy(table[1][i].value, value.c_str());
-    }
+   const char *data = "Hello World!";
+   
+    void *pub_key = malloc(256);
+
 	int retval = -9999;
+    sgx_status_t status = ecall_generate_keys(global_eid, 
+            &retval, (const unsigned char *)data);
 
-    std::cout << "T1 = {";
-    for (int i = 0; i < size - 1; i++) {
-        std::cout << "(" << table[0][i].key << ", " << table[0][i].value << "), ";
+    if(status != SGX_SUCCESS)
+    {
+        sgx_error_print(status);
+
+        return -1;
     }
-    std::cout << "(" << table[0][size-1].key << ", " << table[0][size-1].value << ")}" << std::endl;
-
-    std::cout << "T2 = {";
-    for (int i = 0; i < size - 1; i++) {
-        std::cout << "(" << table[1][i].key << ", " << table[1][i].value << "), ";
-    }
-    std::cout << "(" << table[1][size-1].key << ", " << table[1][size-1].value << ")}" << std::endl;
-
-    for (int i = 0; i < size; i++) {
-        struct keyvalue data;
-        std::string key = "key_";
-        std::string value = "value_";
-        key += std::to_string(i);
-        value += std::to_string(i);
-        std::strcpy(data.key, key.c_str());
-        std::strcpy(data.value, value.c_str());
-
-        std::cout << "\n-----------------------------------------" << std::endl;
-        std::cout << "Insert data (" << data.key << ", " << data.value << ")" << std::endl;
-        std::cout << "\nExecute ECALL.\n" << std::endl;
-
-        sgx_status_t status = ecall_start(global_eid, &retval,
-                table, &data, &size);
-
-        if(status != SGX_SUCCESS)
-        {
-            sgx_error_print(status);
-
-            return -1;
-        }
-        else
-        {
-            /* This function also can display succeeded message */
-            sgx_error_print(status);
-        }
-
-
-        /* print ECALL result */
-        std::cout << "\nReturned integer from ECALL is: " << retval << std::endl;
-        
-        std::cout << "\nT1 = {";
-        for (int i = 0; i < size - 1; i++) {
-            std::cout << "(" << table[0][i].key << ", " << table[0][i].value << "), ";
-        }
-        std::cout << "(" << table[0][size-1].key << ", " << table[0][size-1].value << ")}" << std::endl;
-
-        std::cout << "T2 = {";
-        for (int i = 0; i < size - 1; i++) {
-            std::cout << "(" << table[1][i].key << ", " << table[1][i].value << "), ";
-        }
-        std::cout << "(" << table[1][size-1].key << ", " << table[1][size-1].value << ")}" << std::endl;
+    else
+    {
+        /* This function also can display succeeded message */
+        sgx_error_print(status);
     }
 
+
+    /* print ECALL result */
+    std::cout << "\nReturned integer from ECALL is: " << retval << std::endl;
+
+    // print pub_key
+    char *str = (char *)pub_key;
+    std::printf("pub_key = %s\n", str);
 
 
 	/* Destruct the enclave */

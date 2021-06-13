@@ -15,17 +15,10 @@
 extern "C" {
 #endif
 
-#ifndef _keyvalue
-#define _keyvalue
-typedef struct keyvalue {
-	char key[32];
-	char value[32];
-} keyvalue;
-#endif
+int ecall_generate_keys(const unsigned char* data);
 
-int ecall_start(struct keyvalue table[2][10], struct keyvalue* data, int* size);
-
-sgx_status_t SGX_CDECL ocall_return_stash(struct keyvalue stash[2]);
+sgx_status_t SGX_CDECL ocall_enc_data(unsigned char* penc_data, size_t* size);
+sgx_status_t SGX_CDECL ocall_dec_data(unsigned char* pdec_data, size_t* size);
 
 #ifdef __cplusplus
 }
