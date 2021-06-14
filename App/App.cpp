@@ -143,8 +143,6 @@ int main()
 	/* start ECALL */
     int size = 10;
    const char *data = "Hello World!";
-   
-    void *pub_key = malloc(256);
 
 	int retval = -9999;
     sgx_status_t status = ecall_generate_keys(global_eid, 
@@ -165,11 +163,6 @@ int main()
 
     /* print ECALL result */
     std::cout << "\nReturned integer from ECALL is: " << retval << std::endl;
-
-    // print pub_key
-    char *str = (char *)pub_key;
-    std::printf("pub_key = %s\n", str);
-
 
 	/* Destruct the enclave */
 	sgx_destroy_enclave(global_eid);
