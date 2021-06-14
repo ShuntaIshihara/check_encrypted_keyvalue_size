@@ -16,20 +16,16 @@
 extern "C" {
 #endif
 
-#ifndef _keyvalue
-#define _keyvalue
-typedef struct keyvalue {
-	char key[32];
-	char value[32];
-} keyvalue;
+#ifndef OCALL_ENC_DATA_DEFINED__
+#define OCALL_ENC_DATA_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_enc_data, (unsigned char* penc_data, size_t* size));
+#endif
+#ifndef OCALL_DEC_DATA_DEFINED__
+#define OCALL_DEC_DATA_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_dec_data, (unsigned char* pdec_data, size_t* size));
 #endif
 
-#ifndef OCALL_RETURN_STASH_DEFINED__
-#define OCALL_RETURN_STASH_DEFINED__
-void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_return_stash, (struct keyvalue stash[2]));
-#endif
-
-sgx_status_t ecall_start(sgx_enclave_id_t eid, int* retval, struct keyvalue table[2][10], struct keyvalue* data, int* size);
+sgx_status_t ecall_generate_keys(sgx_enclave_id_t eid, int* retval, const unsigned char* data);
 
 #ifdef __cplusplus
 }
