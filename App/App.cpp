@@ -11,17 +11,16 @@
 sgx_enclave_id_t global_eid = 0;
 
 //OCALL implementation
-void ocall_enc_data(unsigned char *penc_data, size_t *size)
+void ocall_vname(const char *v)
 {
-    std::printf("enc_data = %s\n", (char *)penc_data);
+    std::cout << "-----" << v << "-----" << std::endl;
+}
+void ocall_print(unsigned char *data, size_t *size)
+{
+    std::cout << data << std::endl;
     std::cout << "size = " << *size << std::endl;
 }
 
-void ocall_dec_data(unsigned char *pdec_data, size_t *size)
-{
-    std::printf("dec_data = %s\n", (char *)pdec_data);
-    std::cout << "size = " << *size << std::endl;
-}
 
 /* Enclave initialization function */
 int initialize_enclave()
@@ -79,6 +78,7 @@ int initialize_enclave()
 
 	status = sgx_create_enclave(enclave_name.c_str(), SGX_DEBUG_FLAG, &token,
 		&updated, &global_eid, NULL);
+
 	
 	if(status != SGX_SUCCESS)
 	{
@@ -142,7 +142,7 @@ int main()
 
 	/* start ECALL */
     int size = 10;
-   const char *data = "Hello World!";
+    const char *data = "Hello World!";
 
 	int retval = -9999;
     sgx_status_t status = ecall_generate_keys(global_eid, 
