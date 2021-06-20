@@ -17,8 +17,8 @@ extern "C" {
 
 int ecall_generate_keys(const unsigned char* data);
 
-sgx_status_t SGX_CDECL ocall_enc_data(unsigned char* penc_data, size_t* size);
-sgx_status_t SGX_CDECL ocall_dec_data(unsigned char* pdec_data, size_t* size);
+sgx_status_t SGX_CDECL ocall_vname(const char* v);
+sgx_status_t SGX_CDECL ocall_print(unsigned char* data, size_t* size);
 
 #ifdef __cplusplus
 }

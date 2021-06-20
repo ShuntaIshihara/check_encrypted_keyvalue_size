@@ -16,13 +16,13 @@
 extern "C" {
 #endif
 
-#ifndef OCALL_ENC_DATA_DEFINED__
-#define OCALL_ENC_DATA_DEFINED__
-void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_enc_data, (unsigned char* penc_data, size_t* size));
+#ifndef OCALL_VNAME_DEFINED__
+#define OCALL_VNAME_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_vname, (const char* v));
 #endif
-#ifndef OCALL_DEC_DATA_DEFINED__
-#define OCALL_DEC_DATA_DEFINED__
-void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_dec_data, (unsigned char* pdec_data, size_t* size));
+#ifndef OCALL_PRINT_DEFINED__
+#define OCALL_PRINT_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, ocall_print, (unsigned char* data, size_t* size));
 #endif
 
 sgx_status_t ecall_generate_keys(sgx_enclave_id_t eid, int* retval, const unsigned char* data);

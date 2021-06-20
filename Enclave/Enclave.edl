@@ -3,13 +3,13 @@ enclave
 	trusted
 	{
 		/*These are ECALL defines.*/
-		public int ecall_generate_keys([in]const unsigned char *data);
+		public int ecall_generate_keys([in, string]const unsigned char *data);
 	};
 
 	untrusted
 	{
 		/*These are OCALL defines.*/
-        void ocall_enc_data([in]unsigned char *penc_data, [in]size_t *size);
-        void ocall_dec_data([in]unsigned char *pdec_data, [in]size_t *size);
+        void ocall_vname([in, string]const char *v);
+        void ocall_print([in, string]unsigned char *data, [in]size_t *size);
 	};
 };
